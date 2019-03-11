@@ -27,7 +27,7 @@ function quickname(paths, excludePrefix) {
     paths.forEach(path => {
         let pathNames = path.split("/");
         //get rid of .js at the end
-        const name = pathNames[pathNames.length - 1].split(".")[0];
+        const name = pathNames.join("").split(".").join("");
         importStr.push(`import ${name} from "${path}";`);
         
 
