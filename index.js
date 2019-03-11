@@ -1,9 +1,5 @@
-function isEmpty(obj) {
-    for(let p in obj) {
-        return false;
-    }
-    return true;
-}
+//create string for an object
+//not formatted well
 function namespace(obj, result, space) {
     if (result.length === 0) {
         result.push("{");
@@ -11,7 +7,7 @@ function namespace(obj, result, space) {
     const newSpace = space + "  ";
     for (let p in obj) {
         if (typeof obj[p] === "string") {
-            result.push(newSpace + p + ",");
+            result.push(newSpace + p + ": " + obj[p] + ",");
         } else {
             result.push(newSpace + p + ": {");
             namespace(obj[p], result, newSpace + "  ");
@@ -27,8 +23,10 @@ function quickname(paths, excludePrefix) {
     paths.forEach(path => {
         let pathNames = path.split("/");
         //get rid of .js at the end
-        const name = pathNames.join("").split(".").join("");
-        importStr.push(`import ${name} from "${path}";`);
+        const name = pathNames[pathNames.length - 1].split(".")[0];
+        //use full name to keep it unique for supporting duplicate name
+        const fullName = pathNames.join("").split(".").join("");
+        importStr.push(`import ${fullName} from "${path}";`);
         
 
         path = path.substr(excludePrefix.length || 0);
@@ -41,8 +39,9 @@ function quickname(paths, excludePrefix) {
             }
             current = current[p];
         });
-        current[name] = name;
+        current[name] = fullName;
     });
+    console.log(obj);
     const result = [];
     namespace(obj, result, "");
     return importStr.join("\n") + "\nexport default\n " + result.join("\n");
